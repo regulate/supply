@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    
+    <!-- Activates various annotations to be detected in bean classes -->
+    <context:annotation-config />
+    
+    <!-- Scans the classpath for annotated components that will be auto-registered 
+		as Spring beans. In this case scans for @Controller -->
+	<context:component-scan base-package="org.crud.controller" use-default-filters="false" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!-- Configures the annotation-driven Spring MVC Controller programming 
+		model. With Spring 3.0, this tag works in Servlet MVC only! -->
+	<mvc:annotation-driven />
+
+	<!-- Maps static resources as *.html and *.css -->
+	<mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
+
+	<!-- Adds interceptors -->
+	<mvc:interceptors>
+		<ref bean="localeChangeInterceptor"/>
+	</mvc:interceptors>
+
+	<!-- Bean that maps handlers based on HTTP paths expressed through
+		the RequestMapping annotation at the type or method level -->
+	<bean id="handlerMapping"
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<ref bean="localeChangeInterceptor" />
+		</property>
+	</bean>
+	
+	<!-- View resolvers -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/pages/" p:suffix=".jsp" />
+	
+	<!-- i18n beans  -->
+    
+    <!-- Bundle with messages -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+    <!-- Defines an ability to change language with flag change. Gets all changes of locale -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
+	
+    <!-- Stores locale changes in cookies   -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
+	
+	<!-- i18n beans end -->
+		
+</beans>

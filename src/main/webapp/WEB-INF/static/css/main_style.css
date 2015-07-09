@@ -1,0 +1,9 @@
+body {
+	padding-top: 65px;
+}
+
+/*Setting fixed height of div blocks and allow to scroll in it  */
+.panel-table {
+	height: 250px;
+	overflow: auto;
+}
