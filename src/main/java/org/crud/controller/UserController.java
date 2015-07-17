@@ -134,7 +134,28 @@ public class UserController {
 			log.info(e);
 			return "redirect:/profile?error=incorrect_password";
 		}
-		return "redirect:/profile?success";
+		return "redirect:/profile?success=pass";
 	}
+	
+	@RequestMapping(value = "/profile/details/change", method = RequestMethod.POST)
+	public String changeUserDetails(
+			@RequestParam String fName,
+			@RequestParam String lName) {
+		User user = userService.findUserByEmail(SecurityContextHolder
+				.getContext().getAuthentication().getName());
+
+		try {
+			userService.changeUsersDetails(user, fName, lName);
+		} catch (InvalidUserInputException e) {
+			log.info(e);
+			return "redirect:/profile?error=invalid_input";
+		}
+		
+		return "redirect:/profile?success=details";
+	}
+	
+	
+	
+	
 
 }
