@@ -24,4 +24,7 @@ public interface UserService extends UserDetailsService {
 	public void changeUsersPassword(User user, String curPass, String newPass,
 			String passToCompare) throws InvalidUserInputException,
 			NoSuchPasswordException;
+	
+	public void changeUsersDetails(User user, String firstName, String lastName) 
+			throws InvalidUserInputException;
 }

@@ -85,5 +85,15 @@ public class UserServiceImpl implements UserService {
 			userDao.update(user);
 		}
 	}
+	
+	@Override
+	public void changeUsersDetails(User user, String firstName, String lastName) throws InvalidUserInputException{
+		if(InputValidation.isFirstNameInputValid(firstName) && 
+				InputValidation.isLastNameInputValid(lastName)){
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			userDao.update(user);
+		}
+	}
 
 }
