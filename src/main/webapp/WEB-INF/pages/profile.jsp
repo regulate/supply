@@ -51,70 +51,44 @@
 					<h3 class="panel-title">Profile information</h3>
 				</div>
 				<div class="panel-body">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-2">Email:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getEmail()}</div>
+					<div class="container-fluid">
+
+						<h3>Main information</h3>
+
+						<div class="row top-divider">
+							<label for="email-well" class="col-md-2 control-label">Email:</label>
+							<div class="col-md-6">
+								<div id="email-well" class="well well-sm">${profile.getEmail()}</div>
 							</div>
 						</div>
+
 						<div class="row">
-							<div class="col-md-2">First Name:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getFirstName()}</div>
-							</div>
-							<div class="col-md-1">
-								<a type="button" tabindex="0" data-user-fname="${profile.getFirstName()}" data-toggle="modal" data-target="#update-fname" title="Change First Name">
-									<i class="glyphicon glyphicon-edit"></i>
-								</a>
+							<label for="regd-well" class="col-md-2 control-label">Registration date:</label>
+							<div class="col-md-6">
+								<div id="regd-well" class="well well-sm">${profile.getRegDate()}</div>
 							</div>
 						</div>
+
 						<div class="row">
-							<div class="col-md-2">Last Name:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getLastName()}</div>
-							</div>
-							<div class="col-md-1">
-								<a type="button" tabindex="0" data-user-lname="${profile.getLastName()}" data-toggle="modal" data-target="#update-lname" title="Change Last Name">
-									<i class="glyphicon glyphicon-edit"></i>
-								</a>
+							<label for="role-well" class="col-md-2 control-label">Role:</label>
+							<div class="col-md-6">
+								<div id="role-well" class="well well-sm">${profile.getRole().getRoleName()}</div>
 							</div>
 						</div>
+
 						<div class="row">
-							<div class="col-md-2">Password:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getPassword()}</div>
-							</div>
-							<div class="col-md-1">
-								<a id="ch-pass-btn" type="button" tabindex="0" data-toggle="modal" data-target="#update-password" title="Change Password">
-									<i class="glyphicon glyphicon-edit"></i>
-								</a>
+							<label for="status-well" class="col-md-2 control-label">Status:</label>
+							<div class="col-md-6">
+								<div id="status-well" class="well well-sm">${profile.isBanned() == true ? "Banned" : "Not banned"}</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-2">Registration Date:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getRegDate()}</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-2">Role:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.getRole().getRoleName()}</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-2">Status:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">${profile.isBanned() == true ? "Banned" : "Active"}</div>
-							</div>
-						</div>
-						<!-- Used to indicate if user uses remember me -->
-						<div class="row">
-							<div class="col-md-2">Remember me session:</div>
-							<div class="col-md-6 col-md-offset-1">
-								<div class="well well-sm">
-									<sec:authorize access="isRememberMe()" var="rememberStatus"/>
+
+						<h3>Additional information</h3>
+						<div class="row top-divider">
+							<label for="rm-well" class="col-md-2 control-label">Remember me session:</label>
+							<div class="col-md-6">
+								<div id="rm-well" class="well well-sm">
+									<sec:authorize access="isRememberMe()" var="rememberStatus"></sec:authorize>
 									<c:choose>
 										<c:when test="${rememberStatus == true}">
 											Active
@@ -126,31 +100,80 @@
 								</div>
 							</div>
 						</div>
+
+						<h3>Changable information</h3>
+
+						<form id="profile-update" class="form-horizontal" role="form" method="POST" action="profile/details/change" name="user">
+							<div class="form-group top-divider">
+								<label for="pass-btn" class="col-md-2 control-label">Password:</label>
+								<div class="col-md-6">
+									<button id="pass-btn" type="button" class="btn btn-danger" data-toggle="modal" data-target="#update-password">
+										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Change
+									</button>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="fname-input" class="col-md-2 control-label">First name:</label>
+								<div class="col-md-6">
+									<input id="fname-input" type="text" class="form-control" name="fName" value="${profile.getFirstName()}" required>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="lname-input" class="col-md-2 control-label">Last name:</label>
+								<div class="col-md-6">
+									<input id="lname-input" type="text" class="form-control" name="lName" value="${profile.getLastName()}" required>
+								</div>
+							</div>
+							
+							<div class="form-group">
+	    						<div class="col-md-offset-2 col-md-6">
+	      							<button type="submit" value="Submit" class="btn btn-success">
+										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Update
+									</button>
+	    						</div>
+	  						</div>
+						</form>
 					</div>
 				</div>
+
 				<!-- Generates footer only if there is some error or success msg -->
 				<c:if test="${not empty success or not empty error}">
 					<div class="panel-footer">
 						<div class="container">
 							<div class="row">
+								
 								<c:if test="${not empty success}">
-									<div id="login-alert" class="alert alert-success text-center col-md-6 col-md-offset-3">
-										<spring:message code="label.profile_pass_ch_success" />
+									<div class="alert alert-success text-center col-md-6 col-md-offset-3">
+										<c:choose>
+											<c:when test="${success eq 'pass'}">
+												<spring:message code="label.profile_pass_ch_success" />
+											</c:when>
+											<c:otherwise>
+												<spring:message code="label.profile_details_ch_success" />
+											</c:otherwise>
+										</c:choose>
 									</div>
 								</c:if>
-		
-								<c:choose>
-									<c:when test="${error eq 'invalid_input'}">
-										<div id="login-alert" class="alert alert-danger text-center col-md-6 col-md-offset-3">
-											<spring:message code="label.profile_pass_ch_invalid" />
-										</div>
-									</c:when>
-									<c:when test="${error eq 'incorrect_password'}">
-										<div id="login-alert" class="alert alert-danger text-center col-md-6 col-md-offset-3">
-											<spring:message code="label.profile_pass_ch_incorect" />
-										</div>
-									</c:when>
-								</c:choose>
+								
+								<%-- <c:when test="${success eq 'details'}">
+										<spring:message code="label.profile_details_ch_success" />
+								</c:when> --%>
+
+								<c:if test="${not empty error}">
+									<div class="alert alert-danger text-center col-md-6 col-md-offset-3">
+										<c:choose>
+											<c:when test="${error eq 'invalid_input'}">
+												<spring:message code="label.profile_field_ch_invalid" />
+											</c:when>
+											<c:when test="${error eq 'incorrect_password'}">
+												<spring:message code="label.profile_pass_ch_incorect" />
+											</c:when>
+										</c:choose>
+									</div>
+								</c:if>
+
 							</div>
 						</div>
 					</div>
@@ -171,15 +194,15 @@
 								<div class="container-fluid">
 									<div class="form-group">
 										<span class="label label-info">Current password:</span> 
-										<input id="cur-pass" class="form-control" type="text" name="curPass" placeholder="">
+										<input id="cur-pass" class="form-control" type="text" name="curPass" placeholder="" required>
 									</div>
 									<div class="form-group">
 										<span class="label label-info">New password:</span> 
-										<input id="new-pass" class="form-control" type="text" name="newPass" placeholder="">
+										<input id="new-pass" class="form-control" type="text" name="newPass" placeholder="" required>
 									</div>
 									<div class="form-group">
 										<span class="label label-info">Repeat new password:</span> 
-										<input id="new-pass-rep" class="form-control" type="text" name="passToCompare" placeholder="">
+										<input id="new-pass-rep" class="form-control" type="text" name="passToCompare" placeholder="" required>
 									</div>
 								</div>
 							</div>
