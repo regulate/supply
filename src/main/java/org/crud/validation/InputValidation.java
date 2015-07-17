@@ -51,9 +51,13 @@ public final class InputValidation {
 	 */
 	private static boolean isInputValid(String input, String regexp)
 			throws InvalidUserInputException {
-		if (input != null && input != "")
-			if (!input.matches(regexp))
-				throw new InvalidUserInputException(input);
+		if (input == null || "".equals(input)){
+			throw new InvalidUserInputException(input);
+		}
+		
+		if (!input.matches(regexp)){
+			throw new InvalidUserInputException(input);
+		}
 		return true;
 	}
 
@@ -107,6 +111,18 @@ public final class InputValidation {
 					}
 			} else
 				throw new NoSuchPasswordException(curPass);
+		return false;
+	}
+	
+	public static boolean isFirstNameInputValid(String name) throws InvalidUserInputException{
+		if(isInputValid(name, FIRSTNAME_PATTERN))
+			return true;
+		return false;
+	}
+	
+	public static boolean isLastNameInputValid(String name) throws InvalidUserInputException{
+		if(isInputValid(name, LASTNAME_PATTERN))
+			return true;
 		return false;
 	}
 }
