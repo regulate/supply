@@ -11,3 +11,8 @@ body {
 	height: 250px;
 	overflow: auto;
 }
+
+.top-divider {
+	padding-top: 10px;
+	border-top: thin solid #D9EDF7;
+}
