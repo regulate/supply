@@ -1,12 +1,15 @@
 package org.crud.validation;
 
+import org.apache.log4j.Logger;
 import org.crud.entity.User;
 import org.crud.exceptions.InvalidUserInputException;
 import org.crud.exceptions.NoSuchPasswordException;
+import org.crud.utils.PasswordEncoder;
 
-public final class InputValidation {
-	
-	
+public abstract class InputValidation {
+
+	private static final Logger log = Logger.getLogger(InputValidation.class);
+
 	/*
 	 * Email pattern description: ^ #start of the line [_A-Za-z0-9-\\+]+ #must
 	 * start with string in the bracket [ ], must contains one or more (+) (
@@ -49,79 +52,99 @@ public final class InputValidation {
 	 *            - regular expression to match with input
 	 * @return true, if input matches with regexp
 	 */
-	private static boolean isInputValid(String input, String regexp)
+	private static final boolean isInputValid(final String input, String regexp)
 			throws InvalidUserInputException {
-		if (input == null || "".equals(input)){
+		if (input == null || "".equals(input)) {
 			throw new InvalidUserInputException(input);
 		}
-		
-		if (!input.matches(regexp)){
+
+		if (!input.matches(regexp)) {
 			throw new InvalidUserInputException(input);
 		}
 		return true;
 	}
 
 	/**
-	 * This method provides validation of user input when registration occurs
+	 * This method provides validation of user's input when registration occurs
 	 * 
 	 * @param user
 	 *            - entity, which represents user registration information
 	 * @return true, if all registration input are valid
-	 * @throws InvalidUserInputException 
+	 * @throws InvalidUserInputException if some of parameters is't match it's pattern
 	 */
-	public static boolean isRegInputValid(User user) throws InvalidUserInputException {
-			if (isInputValid(user.getEmail(), EMAIL_PATTERN)
-					&& isInputValid(user.getFirstName(), FIRSTNAME_PATTERN)
-					&& isInputValid(user.getLastName(), LASTNAME_PATTERN)
-					&& isInputValid(user.getPassword(), PASSWORD_PATTERN)){
-				return true;
-			}
+	public static final boolean isRegInputValid(final User user)
+			throws InvalidUserInputException {
+		if (isInputValid(user.getEmail(), EMAIL_PATTERN)
+				&& isInputValid(user.getFirstName(), FIRSTNAME_PATTERN)
+				&& isInputValid(user.getLastName(), LASTNAME_PATTERN)
+				&& isInputValid(user.getPassword(), PASSWORD_PATTERN)) {
+			return true;
+		}
 		return false;
 	}
 
 	/**
-	 * This method provides validation of user input when login occurs
+	 * This method provides validation of user's input when login occurs
 	 * 
 	 * @param email
 	 *            - email address, entered to the email field on login form
 	 * @param password
 	 *            - password, entered to the password field on login form
 	 * @return true, if both parameters are valid
-	 * @throws InvalidUserInputException 
+	 * @throws InvalidUserInputException if some of parameters is't match it's pattern
 	 */
-	public static boolean isLoginInputValid(String email, String password) 
-			throws InvalidUserInputException {
+	public static final boolean isLoginInputValid(final String email,
+			final String password) throws InvalidUserInputException {
 		if (isInputValid(email, EMAIL_PATTERN)
 				&& isInputValid(password, PASSWORD_PATTERN))
 			return true;
 		return false;
 	}
+	
+	/**
+	 * This method provides validation of user's input when changing a password 
+	 * 
+	 * @param user - entity which represents a user who tries to change a password
+	 * @param curPass - current password value specified by user in change form.
+	 * May differ from actual password
+	 * @param newPass - new password value specified by user in change form
+	 * @param passToCompare - value to compare with {@code newPass} parameter
+	 * @return true if all parameters valid due to their patterns,
+	 * {@code newPass} equals to actual password and to {@code passToCompare}
+	 * @throws NoSuchPasswordException if {@code curPass} isn't equal to actual password
+	 * @throws InvalidUserInputException if some of parameters is't match it's pattern
+	 */
 
-	public static boolean isPassChangeInputValid(User user, String curPass,
-			String newPass, String passToCompare)
-			throws NoSuchPasswordException, InvalidUserInputException {
-		if (isInputValid(curPass, PASSWORD_PATTERN))
-			if (curPass.equals(user.getPassword())) {
+	public static final boolean isPassChangeInputValid(final User user,
+			final String curPass, final String newPass,
+			final String passToCompare) throws NoSuchPasswordException,
+			InvalidUserInputException {
+		if (isInputValid(curPass, PASSWORD_PATTERN)) {
+			if (PasswordEncoder.matches(curPass, user.getPassword())) {
 				if (isInputValid(newPass, PASSWORD_PATTERN)
 						&& isInputValid(passToCompare, PASSWORD_PATTERN))
-					if (newPass.equals(passToCompare)){
+					if (newPass.equals(passToCompare)) {
 						return true;
-					} else{
-						throw new InvalidUserInputException(newPass+" is not equal to "+passToCompare);
+					} else {
+						throw new InvalidUserInputException(newPass
+								+ " is not equal to " + passToCompare);
 					}
 			} else
 				throw new NoSuchPasswordException(curPass);
+		}
 		return false;
 	}
-	
-	public static boolean isFirstNameInputValid(String name) throws InvalidUserInputException{
-		if(isInputValid(name, FIRSTNAME_PATTERN))
+
+	public static final boolean isFirstNameInputValid(final String name)
+			throws InvalidUserInputException {
+		if (isInputValid(name, FIRSTNAME_PATTERN))
 			return true;
 		return false;
 	}
-	
-	public static boolean isLastNameInputValid(String name) throws InvalidUserInputException{
-		if(isInputValid(name, LASTNAME_PATTERN))
+
+	public static final boolean isLastNameInputValid(final String name)
+			throws InvalidUserInputException {
+		if (isInputValid(name, LASTNAME_PATTERN))
 			return true;
 		return false;
 	}
