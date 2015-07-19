@@ -12,6 +12,7 @@ import org.crud.exceptions.InvalidUserInputException;
 import org.crud.exceptions.NoSuchPasswordException;
 import org.crud.exceptions.UserExistException;
 import org.crud.service.UserService;
+import org.crud.utils.PasswordEncoder;
 import org.crud.validation.InputValidation;
 import org.crud.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
 			User loaded = userDao.findUserByEmail(user.getEmail());
 			if (!UserValidation.isUserExists(loaded)) {
 				user.setRole(roleDao.findRole(USER_ROLE));
+				user.setPassword(PasswordEncoder.getHashedPassword(user.getPassword()));
 				userDao.add(user);
 			}
 		}
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
 			String passToCompare) throws InvalidUserInputException, NoSuchPasswordException {
 		if (InputValidation.isPassChangeInputValid(user, curPass, newPass,
 				passToCompare)) {
-			user.setPassword(newPass);
+			user.setPassword(PasswordEncoder.getHashedPassword(newPass));
 			userDao.update(user);
 		}
 	}

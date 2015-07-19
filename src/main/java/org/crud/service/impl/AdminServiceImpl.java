@@ -6,6 +6,7 @@ import org.crud.entity.User;
 import org.crud.exceptions.InvalidUserInputException;
 import org.crud.exceptions.UserExistException;
 import org.crud.service.AdminService;
+import org.crud.utils.PasswordEncoder;
 import org.crud.validation.InputValidation;
 import org.crud.validation.UserValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class AdminServiceImpl implements AdminService{
 			try {
 				if (!UserValidation.isUserExists(loaded)) {
 					loaded.setRole(roleDao.findRole(ROLE_ADMIN));
+					user.setPassword(PasswordEncoder.getHashedPassword(user.getPassword()));
 					userDao.add(user);
 				}
 			} catch (UserExistException e) {
