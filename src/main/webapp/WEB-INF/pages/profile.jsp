@@ -194,15 +194,15 @@
 								<div class="container-fluid">
 									<div class="form-group">
 										<span class="label label-info">Current password:</span> 
-										<input id="cur-pass" class="form-control" type="text" name="curPass" placeholder="" required>
+										<input id="cur-pass" class="form-control" type="password" name="curPass" placeholder="" required>
 									</div>
 									<div class="form-group">
 										<span class="label label-info">New password:</span> 
-										<input id="new-pass" class="form-control" type="text" name="newPass" placeholder="" required>
+										<input id="new-pass" class="form-control" type="password" name="newPass" placeholder="" required>
 									</div>
 									<div class="form-group">
 										<span class="label label-info">Repeat new password:</span> 
-										<input id="new-pass-rep" class="form-control" type="text" name="passToCompare" placeholder="" required>
+										<input id="new-pass-rep" class="form-control" type="password" name="passToCompare" placeholder="" required>
 									</div>
 								</div>
 							</div>
